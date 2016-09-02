@@ -18,11 +18,7 @@
 #ifndef itkObjectnessMeasureImageFilter_h
 #define itkObjectnessMeasureImageFilter_h
 
-
-#include "itkHessianRecursiveGaussianImageFilter.h"
-#include "itkHessianToObjectnessMeasureImageFilter.h"
-#include "itkProgressAccumulator.h"
-
+#include "itkImageToImageFilter.h"
 
 namespace itk
 {
@@ -52,7 +48,7 @@ public:
   typedef double                                   InternalType;
 
   /** Image dimension */
-  itkStaticConstMacro(ImageDimension, unsigned int,  InputImageType ::ImageDimension);
+  itkStaticConstMacro(ImageDimension, unsigned int, InputImageType::ImageDimension);
 
 
   /** Method for creation through the object factory. */
@@ -99,78 +95,20 @@ public:
 
 
 protected:
-  ObjectnessMeasureImageFilter()
-    :  m_Alpha( 0.5 ),
-       m_Beta( 0.5 ),
-       m_Gamma( 5.0 ),
-       m_ObjectDimension( 1 ),
-       m_BrightObject( true ),
-       m_ScaleObjectnessMeasure( true )
-    { }
+  ObjectnessMeasureImageFilter();
 
-  ~ObjectnessMeasureImageFilter() {}
+  ~ObjectnessMeasureImageFilter();
 
 
-  void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE
-    {
-      output->SetRequestedRegionToLargestPossibleRegion();
-    }
+  void EnlargeOutputRequestedRegion(DataObject *output) ITK_OVERRIDE;
 
-  virtual void GenerateData() ITK_OVERRIDE
-    {
-      // Create a process accumulator for tracking the progress of this minipipeline
-      ProgressAccumulator::Pointer progress = ProgressAccumulator::New();
-      progress->SetMiniPipelineFilter( this );
+  virtual void GenerateData() ITK_OVERRIDE;
 
-      typename InputImageType::Pointer localInput = InputImageType::New();
-      localInput->Graft( this->GetInput() );
-
-      typedef HessianRecursiveGaussianImageFilter<InputImageType> HessianFilterType;
-      typedef typename HessianFilterType::OutputImageType         HessianImageType;
-
-      typename HessianFilterType::Pointer hessianFilter = HessianFilterType::New();
-
-      hessianFilter->SetInput( localInput );
-
-      hessianFilter->SetSigma( 1.0 );
-
-
-      typedef HessianToObjectnessMeasureImageFilter< HessianImageType, OutputImageType > ObjectnessFilterType;
-
-      typename ObjectnessFilterType::Pointer objectnessFilter = ObjectnessFilterType::New();
-
-      objectnessFilter->SetInput( hessianFilter->GetOutput() );
-
-      objectnessFilter->SetAlpha( m_Alpha );
-      objectnessFilter->SetBeta( m_Beta );
-      objectnessFilter->SetGamma( m_Gamma );
-      objectnessFilter->SetScaleObjectnessMeasure( m_ScaleObjectnessMeasure );
-      objectnessFilter->SetObjectDimension( m_ObjectDimension );
-      objectnessFilter->SetBrightObject( m_BrightObject);
-
-      progress->RegisterInternalFilter( hessianFilter, 0.5f );
-      progress->RegisterInternalFilter( objectnessFilter, 0.5f );
-
-
-      objectnessFilter->GraftOutput( this->GetOutput() );
-      objectnessFilter->Update();
-      this->GraftOutput(objectnessFilter->GetOutput());
-    }
-
-  void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE
-    {
-      Superclass::PrintSelf(os, indent);
-
-      os << indent << "Alpha: " << m_Alpha << std::endl;
-      os << indent << "Beta: " << m_Beta << std::endl;
-      os << indent << "Gamma: " << m_Gamma << std::endl;
-      os << indent << "ScaleObjectnessMeasure: " << m_ScaleObjectnessMeasure << std::endl;
-      os << indent << "ObjectDimension: " << m_ObjectDimension << std::endl;
-      os << indent << "BrightObject: " << m_BrightObject << std::endl;
-    }
+  void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
 private:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ObjectnessMeasureImageFilter);
+  ObjectnessMeasureImageFilter(const Self&);  //purposely not implemented
+  void operator=(const Self&);  //purposely not implemented
 
   double       m_Alpha;
   double       m_Beta;
@@ -182,5 +120,10 @@ private:
 };
 
 }
+
+
+#ifndef ITK_MANUAL_INSTANTIATION
+#include "itkObjectnessMeasureImageFilter.hxx"
+#endif
 
 #endif // itkObjectnessMeasureImageFilter_h
