@@ -4,6 +4,11 @@ env
 
 mkdir -p "${ExternalData_OBJECT_STORES}"
 
+if [ -n "${APPVEYOR_BUILD_FOLDER+x}" ]
+then
+    PROJ_SRC=${APPVEYOR_BUILD_FOLDER}
+fi
+
 ( cd ${ExternalData_OBJECT_STORES} &&
     if [[ ! -e ${ITK_REPOSITORY} ]]
     then
