@@ -14,4 +14,9 @@ set(CTEST_BUILD_NAME "$ENV{ITK_MODULE_NAME}-$ENV{TRAVIS_OS_NAME}-${compiler_name
 set(CTEST_CONFIGURATION_TYPE Release)
 set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
 
+list(APPEND CTEST_NOTES_FILES
+  "${CMAKE_CURRENT_LIST_FILE}"
+  "$ENV{PROJ_SRC}/.travis.yml"
+  )
+
 include("${CTEST_SCRIPT_DIRECTORY}/common_dashboard.cmake")

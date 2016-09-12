@@ -15,6 +15,13 @@ if("${CTEST_CMAKE_GENERATOR}" STREQUAL "")
   set(CTEST_CMAKE_GENERATOR "Visual Studio 9 2008")
 endif()
 
-set(CTEST_BUILD_NAME "VS-${platform}-$ENV{CONFIGURATION}_${what}_${commit}")
+set(platform $ENV{PLATFORM})
+
+set(CTEST_BUILD_NAME "$ENV{ITK_MODULE_NAME}-VS-${platform}-$ENV{CONFIGURATION}_${what}_${commit}")
+
+list(APPEND CTEST_NOTES_FILES
+  "${CMAKE_CURRENT_LIST_FILE}"
+  "$ENV{PROJ_SRC}/appveyor.yml"
+  )
 
 include("${CTEST_SCRIPT_DIRECTORY}/common_dashboard.cmake")

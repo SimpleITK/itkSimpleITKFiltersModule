@@ -47,5 +47,9 @@ SET (dashboard_cache "
     Module_${itk_module}:BOOL=ON
 " )
 
+list(APPEND CTEST_NOTES_FILES
+  "${CMAKE_CURRENT_LIST_FILE}"
+  )
+
 include(${CTEST_SCRIPT_DIRECTORY}/../dashboard/itk_common.cmake)
 
