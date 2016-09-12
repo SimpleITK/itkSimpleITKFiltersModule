@@ -22,7 +22,8 @@ environment:
     ITK_SRC: 'C:\ITK'
 
   matrix:
-    - GENERATOR: "Visual Studio 12 2013 Win64"
+    - GENERATOR: "Visual Studio 9 2008"
+    - GENERATOR: "Visual Studio 14 2015 Win64"
 
 install:
   - '%CYG_ROOT%/bin/bash -x "%PROJ_SRC%\test\ci\CacheAndUpdateITK.sh"'
