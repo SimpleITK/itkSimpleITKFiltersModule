@@ -16,6 +16,10 @@
  *
  *=========================================================================*/
 
+#if defined( _MSC_VER ) && ! defined ( NDEBUG )
+// Disable MSVC STL iterator debugging, as it's way too slow.
+#define _HAS_ITERATOR_DEBUGGING 0
+#endif
 #include "itkSLICImageFilter.h"
 #include "itkVectorImage.h"
 #include "itkImageFileReader.h"
