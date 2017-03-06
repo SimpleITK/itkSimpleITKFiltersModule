@@ -1,4 +1,3 @@
-
 language: cpp
 
 env:
@@ -18,6 +17,28 @@ matrix:
     - os: linux
       dist: trusty
       sudo: required
+    - os: linux
+      env: CI_CXX=g++-6 CI_CCC=gcc-6
+      sudo: required
+      dist: trusty
+      addons:
+        apt:
+          sources:
+          # add PPAs with more up-to-date toolchains
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+    - os: linux
+      env: CI_CXX=g++-5 CI_CCC=gcc-5
+      sudo: required
+      dist: trusty
+      addons:
+        sources:
+          # add PPAs with more up-to-date toolchains
+            - ubuntu-toolchain-r-test
+        apt:
+          packages:
+            - g++-5
     - os: osx
       osx_image: xcode7.3
 
@@ -28,6 +49,10 @@ before_install:
 
 before_script:
    - cmake --version
+   - if [[ -n "$CI_CC" ]]; then export CC="$CI_CC"; fi
+   - if [[ -n "$CI_CXX" ]]; then export CXX="$CI_CXX"; fi
+   - ls -la $(which $CXX)
+   - $CXX --version
    - env
    - bash -x ${PROJ_SRC}/test/ci/CacheAndUpdateITK.sh
 
